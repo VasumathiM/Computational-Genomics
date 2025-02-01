@@ -1,14 +1,15 @@
 # Read the Series Matrix file
-metadata_raw <- read.delim("GSE212787_series_matrix.txt", header = FALSE, stringsAsFactors = FALSE)
+# Read the file as a character vector (not a data frame)
+metadata_raw <- readLines("GSE135485_series_matrix.txt")
 
 # Extract Sample IDs
-sample_ids <- unlist(strsplit(metadata_raw[grep("!Sample_geo_accession", metadata_raw$V1), ], "\t"))[-1]
+sample_ids <- unlist(strsplit(metadata_raw[grep("^!Sample_geo_accession", metadata_raw)], "\t"))[-1]
 
-# Extract Sample Titles (Descriptive Labels)
-sample_titles <- unlist(strsplit(metadata_raw[grep("!Sample_title", metadata_raw$V1), ], "\t"))[-1]
+# Extract Sample Titles
+sample_titles <- unlist(strsplit(metadata_raw[grep("^!Sample_title", metadata_raw)], "\t"))[-1]
 
 # Extract Disease State
-disease_state <- unlist(strsplit(metadata_raw[grep("disease state", metadata_raw$V1), ], "\t"))[-1]
+disease_state <- unlist(strsplit(metadata_raw[grep("tissue:", metadata_raw)], "\t"))[-1]
 
 # Create a metadata table
 metadata <- data.frame(
@@ -21,4 +22,5 @@ metadata <- data.frame(
 # Display first few rows
 head(metadata)
 
-write.csv(metadata, "GSE212787_metadata.csv", row.names = FALSE)
+write.csv(metadata, "GSE135485_metadata.csv", row.names = FALSE)
+
